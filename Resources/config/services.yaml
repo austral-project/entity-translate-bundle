@@ -1,0 +1,23 @@
+services:
+  _defaults:
+    public:       true
+
+  austral.entity_translate.doctrine.listener:
+    class:          Austral\EntityTranslateBundle\Listener\DoctrineListener
+    calls:
+      - [ setRequestStack, [ "@request_stack" ] ]
+    tags:
+      - { name: doctrine.event_subscriber, connection: default }
+
+  austral.entity_translate.entity_manager.listener:
+    class:          Austral\EntityTranslateBundle\Listener\EntityManagerListener
+    arguments:      ["@event_dispatcher"]
+    tags:
+      - { name: kernel.event_listener, event: "austral.entity_manager.duplicate", method: duplicate, priority: 1000 }
+      - { name: kernel.event_listener, event: "austral.entity_manager.mapping_association", method: mapping }
+
+  austral.entity_translate.entity_mapping.listener:
+    class:          Austral\EntityTranslateBundle\Listener\EntityMappingListener
+    tags:
+      - { name: kernel.event_listener, event: "austral.event.entity.initialise.mapping", method: mapping, priority: 2048 }
+      - { name: kernel.event_listener, event: "austral.event.entity.initialise.mapping", method: mappingAfter, priority: -2048 }
