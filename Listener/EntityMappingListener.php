@@ -16,6 +16,7 @@ use Austral\EntityBundle\Event\EntityMappingEvent;
 use Austral\EntityBundle\EntityAnnotation\EntityAnnotations;
 use Austral\EntityBundle\Mapping\EntityMapping;
 use Austral\EntityBundle\Mapping\FieldMappingInterface;
+use Austral\EntityTranslateBundle\Mapping\EntityTranslateMapping;
 use Austral\EntityTranslateBundle\Annotation\Translate;
 use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateMasterInterface;
 use Doctrine\Persistence\Mapping\MappingException;
@@ -69,6 +70,15 @@ class EntityMappingListener
                 "class" =>  $entityAnnotationTranslate->getClassAnnotations()
               );
               $entitiesAnnotations->removeEntityAnnotations($annotation->relationClass);
+
+              $entityTranslateMapping = new EntityTranslateMapping();
+              $entityTranslateMapping->setMasterClass($entityAnnotation->getClassname());
+              $entityTranslateMapping->setTranslateClass($annotation->relationClass);
+              if(!$entityMapping = $entityMappingEvent->getMapping()->getEntityMapping($entityAnnotation->getClassname()))
+              {
+                $entityMapping = new EntityMapping($entityAnnotation->getClassname(), $entityAnnotation->getSlugger());
+              }
+              $entityMapping->addEntityClassMapping($entityTranslateMapping);
             }
           }
         }
