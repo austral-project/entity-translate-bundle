@@ -12,6 +12,7 @@ namespace Austral\EntityTranslateBundle\Listener;
 
 
 use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateMasterInterface;
+use Austral\HttpBundle\Services\HttpRequest;
 use Doctrine\Common\EventArgs;
 use Doctrine\Common\EventSubscriber;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,12 +32,18 @@ class DoctrineListener implements EventSubscriber
   protected $name;
 
   /**
+   * @var HttpRequest|null
+   */
+  protected ?HttpRequest $httpRequest = null;
+
+  /**
    * DoctrineListener constructor.
    */
-  public function __construct()
+  public function __construct(?HttpRequest $httpRequest)
   {
       $parts = explode('\\', $this->getNamespace());
       $this->name = end($parts);
+      $this->httpRequest = $httpRequest;
   }
 
   /**
@@ -50,6 +57,24 @@ class DoctrineListener implements EventSubscriber
   public function setRequestStack(RequestStack $request)
   {
       $this->request = $request->getCurrentRequest();
+  }
+
+  /**
+   * @return string|null
+   */
+  public function getCurrentLanguage(): ?string
+  {
+    if($this->httpRequest) {
+      return $this->httpRequest->getLanguage();
+    }
+    elseif($this->request && (
+        ($lang = $this->request->attributes->get("language")) ||
+        ($lang = $this->request->attributes->get("_locale")) ||
+        ($lang = $this->request->getLocale())))
+    {
+      return $lang;
+    }
+    return null;
   }
 
   /**
@@ -71,10 +96,7 @@ class DoctrineListener implements EventSubscriber
     $object = $ea->getObject();
     if($object instanceof EntityTranslateMasterInterface)
     {
-      if($this->request && (
-          ($lang = $this->request->attributes->get("language")) ||
-          ($lang = $this->request->attributes->get("_locale")) ||
-          ($lang = $this->request->getLocale())))
+      if($lang = $this->getCurrentLanguage())
       {
         $object->setCurrentLanguage($lang);
       }

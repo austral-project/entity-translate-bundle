@@ -4,6 +4,7 @@ services:
 
   austral.entity_translate.doctrine.listener:
     class:          Austral\EntityTranslateBundle\Listener\DoctrineListener
+    arguments:      ["@?austral.http.request"]
     calls:
       - [ setRequestStack, [ "@request_stack" ] ]
     tags:
