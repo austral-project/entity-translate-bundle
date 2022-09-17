@@ -11,7 +11,7 @@ namespace Austral\EntityTranslateBundle\Entity\Traits;
 
 use Austral\EntityBundle\Entity\EntityInterface;
 use Austral\EntityFileBundle\Entity\Traits\EntityFileCropperTrait;
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateChildInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateChildInterface;
 
 /**
  * Austral Translate Entity File Cropper To Master Translate Trait.
@@ -21,7 +21,7 @@ trait EntityTranslateMasterFileCropperTrait
 {
 
   /**
-   * @return EntityFileCropperTrait|EntityInterface|EntityTranslateChildInterface
+   * @return EntityFileCropperTrait|EntityInterface|TranslateChildInterface
    * @throws \Exception
    */
   private function getTranslateCurrentCropper(): EntityInterface

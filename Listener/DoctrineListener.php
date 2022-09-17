@@ -11,7 +11,7 @@
 namespace Austral\EntityTranslateBundle\Listener;
 
 
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateMasterInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
 use Austral\HttpBundle\Services\HttpRequest;
 use Doctrine\Common\EventArgs;
 use Doctrine\Common\EventSubscriber;
@@ -94,7 +94,7 @@ class DoctrineListener implements EventSubscriber
   {
     $ea = $this->getEventAdapter($args);
     $object = $ea->getObject();
-    if($object instanceof EntityTranslateMasterInterface)
+    if($object instanceof TranslateMasterInterface)
     {
       if($lang = $this->getCurrentLanguage())
       {

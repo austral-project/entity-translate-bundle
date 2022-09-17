@@ -11,21 +11,22 @@
 namespace Austral\EntityTranslateBundle\Entity\Traits;
 
 use Austral\EntityBundle\Entity\EntityInterface;
-use Austral\EntitySeoBundle\Entity\Interfaces\EntityRobotInterface;
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateChildInterface;
+use Austral\EntityBundle\Entity\Interfaces\RobotInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateChildInterface;
 
 /**
  * Austral Translate Entity Robot To Master Translate Trait.
  * @author Matthieu Beurel <matthieu@austral.dev>
+ * @deprecated
  */
 trait EntityTranslateMasterRobotTrait
 {
 
   /**
-   * @return EntityRobotInterface|EntityInterface|EntityTranslateChildInterface|null
+   * @return RobotInterface|EntityInterface|TranslateChildInterface|null
    * @throws \Exception
    */
-  private function getTranslateCurrentRobot(): ?EntityRobotInterface
+  private function getTranslateCurrentRobot(): ?RobotInterface
   {
     return $this->getTranslateCurrent();
   }
@@ -45,10 +46,10 @@ trait EntityTranslateMasterRobotTrait
    *
    * @param string $status
    *
-   * @return EntityRobotInterface|EntityTranslateMasterRobotTrait
+   * @return RobotInterface|EntityTranslateMasterRobotTrait
    * @throws \Exception
    */
-  public function setStatus(string $status): EntityRobotInterface
+  public function setStatus(string $status): RobotInterface
   {
     if($this->getTranslateCurrentRobot())
     {
@@ -81,10 +82,10 @@ trait EntityTranslateMasterRobotTrait
    *
    * @param bool $isIndex
    *
-   * @return EntityRobotInterface|EntityTranslateMasterRobotTrait
+   * @return RobotInterface|EntityTranslateMasterRobotTrait
    * @throws \Exception
    */
-  public function setIsIndex(bool $isIndex): EntityRobotInterface
+  public function setIsIndex(bool $isIndex): RobotInterface
   {
     if($this->getTranslateCurrentRobot())
     {
@@ -108,10 +109,10 @@ trait EntityTranslateMasterRobotTrait
    *
    * @param bool $isFollow
    *
-   * @return EntityRobotInterface|EntityTranslateMasterRobotTrait
+   * @return RobotInterface|EntityTranslateMasterRobotTrait
    * @throws \Exception
    */
-  public function setIsFollow(bool $isFollow): EntityRobotInterface
+  public function setIsFollow(bool $isFollow): RobotInterface
   {
     if($this->getTranslateCurrentRobot())
     {
@@ -135,10 +136,10 @@ trait EntityTranslateMasterRobotTrait
    *
    * @param bool $inSitemap
    *
-   * @return EntityRobotInterface|EntityTranslateMasterRobotTrait
+   * @return RobotInterface|EntityTranslateMasterRobotTrait
    * @throws \Exception
    */
-  public function setInSitemap(bool $inSitemap): EntityRobotInterface
+  public function setInSitemap(bool $inSitemap): RobotInterface
   {
     if($this->getTranslateCurrentRobot())
     {

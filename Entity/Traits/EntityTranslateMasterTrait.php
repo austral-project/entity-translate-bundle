@@ -11,9 +11,9 @@
 namespace Austral\EntityTranslateBundle\Entity\Traits;
 
 use Austral\EntityBundle\Entity\EntityInterface;
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateMasterInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
 use Austral\ToolsBundle\AustralTools;
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateChildInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateChildInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\Uuid;
@@ -40,9 +40,9 @@ trait EntityTranslateMasterTrait
   protected ?string $languageSelectForm = null;
 
   /**
-   * @var EntityTranslateChildInterface|null
+   * @var TranslateChildInterface|null
    */
-  protected ?EntityTranslateChildInterface $translateCurrent = null;
+  protected ?TranslateChildInterface $translateCurrent = null;
 
   /**
    * @var array
@@ -74,7 +74,7 @@ trait EntityTranslateMasterTrait
    * @param string $name
    * @param $value
    *
-   * @return EntityTranslateMasterInterface|EntityInterface
+   * @return TranslateMasterInterface|EntityInterface
    * @throws \Exception
    */
   public function __set(string $name, $value)
@@ -90,11 +90,11 @@ trait EntityTranslateMasterTrait
   /**
    * Add translates
    *
-   * @param EntityTranslateChildInterface $translate
+   * @param TranslateChildInterface $translate
    *
-   * @return EntityTranslateMasterInterface|EntityInterface
+   * @return TranslateMasterInterface|EntityInterface
    */
-  public function addTranslates(EntityTranslateChildInterface $translate): EntityTranslateMasterInterface
+  public function addTranslates(TranslateChildInterface $translate): TranslateMasterInterface
   {
     if(!$this->translates->contains($translate))
     {
@@ -111,11 +111,11 @@ trait EntityTranslateMasterTrait
   /**
    * Remove translates
    *
-   * @param EntityTranslateChildInterface $translate
+   * @param TranslateChildInterface $translate
    *
-   * @return EntityTranslateMasterInterface|EntityInterface
+   * @return TranslateMasterInterface|EntityInterface
    */
-  public function removeTranslates(EntityTranslateChildInterface $translate): EntityTranslateMasterInterface
+  public function removeTranslates(TranslateChildInterface $translate): TranslateMasterInterface
   {
     if($this->translates->contains($translate))
     {
@@ -136,9 +136,9 @@ trait EntityTranslateMasterTrait
   }
 
   /**
-   * @return EntityTranslateMasterInterface|EntityInterface
+   * @return TranslateMasterInterface|EntityInterface
    */
-  public function removeAllTranslates(): EntityTranslateMasterInterface
+  public function removeAllTranslates(): TranslateMasterInterface
   {
     $this->translates = new ArrayCollection();
     $this->translatesByLanguage = array();
@@ -165,9 +165,9 @@ trait EntityTranslateMasterTrait
   /**
    * @param string|null $value
    *
-   * @return EntityTranslateMasterInterface|EntityInterface
+   * @return TranslateMasterInterface|EntityInterface
    */
-  public function setCurrentLanguage(?string $value): EntityTranslateMasterInterface
+  public function setCurrentLanguage(?string $value): TranslateMasterInterface
   {
     $this->languageCurrent = $value;
     $this->translateCurrent = null;
@@ -175,12 +175,12 @@ trait EntityTranslateMasterTrait
   }
 
   /**
-   * @param EntityTranslateChildInterface $translate
+   * @param TranslateChildInterface $translate
    * @param $fieldKey
    *
    * @return mixed
    */
-  public function getTranslateValueByKey(EntityTranslateChildInterface $translate, $fieldKey)
+  public function getTranslateValueByKey(TranslateChildInterface $translate, $fieldKey)
   {
     if(method_exists($translate, $fieldKey))
     {
@@ -191,13 +191,13 @@ trait EntityTranslateMasterTrait
   }
 
   /**
-   * @param EntityTranslateChildInterface $translate
+   * @param TranslateChildInterface $translate
    * @param $fieldKey
    * @param null $value
    *
-   * @return EntityTranslateMasterInterface|EntityInterface
+   * @return TranslateMasterInterface|EntityInterface
    */
-  public function setTranslateValueByKey(EntityTranslateChildInterface $translate, $fieldKey, $value = null): EntityTranslateMasterInterface
+  public function setTranslateValueByKey(TranslateChildInterface $translate, $fieldKey, $value = null): TranslateMasterInterface
   {
     $setter = AustralTools::createSetterFunction($fieldKey);
     $translate->$setter($value);
@@ -221,9 +221,9 @@ trait EntityTranslateMasterTrait
   }
 
   /**
-   * @return EntityTranslateChildInterface|null
+   * @return TranslateChildInterface|null
    */
-  public function getTranslateReferent(): ?EntityTranslateChildInterface
+  public function getTranslateReferent(): ?TranslateChildInterface
   {
     $referentTranslate = AustralTools::first($this->getTranslatesByLanguage());
     foreach($this->getTranslatesByLanguage() as $translate)
@@ -239,18 +239,18 @@ trait EntityTranslateMasterTrait
   /**
    * @param string $langue
    *
-   * @return EntityTranslateChildInterface|null
+   * @return TranslateChildInterface|null
    */
-  public function getTranslateByLanguage(string $langue): ?EntityTranslateChildInterface
+  public function getTranslateByLanguage(string $langue): ?TranslateChildInterface
   {
     return AustralTools::getValueByKey($this->getTranslatesByLanguage(), $langue);
   }
 
   /**
-   * @return EntityTranslateChildInterface|null
+   * @return TranslateChildInterface|null
    * @throws \Exception
    */
-  public function getTranslateCurrent(): ?EntityTranslateChildInterface
+  public function getTranslateCurrent(): ?TranslateChildInterface
   {
     if(!$this->translateCurrent)
     {
@@ -276,11 +276,11 @@ trait EntityTranslateMasterTrait
   }
 
   /**
-   * @param EntityTranslateChildInterface $child
+   * @param TranslateChildInterface $child
    *
-   * @return EntityTranslateMasterInterface|EntityInterface
+   * @return TranslateMasterInterface|EntityInterface
    */
-  public function setTranslateCurrent(EntityTranslateChildInterface $child): ?EntityTranslateMasterInterface
+  public function setTranslateCurrent(TranslateChildInterface $child): ?TranslateMasterInterface
   {
     $this->addTranslateByLanguage($child);
     $this->translateCurrent = $child;
@@ -288,11 +288,11 @@ trait EntityTranslateMasterTrait
   }
 
   /**
-   * @param EntityTranslateChildInterface $child
+   * @param TranslateChildInterface $child
    *
-   * @return EntityTranslateMasterInterface|EntityInterface
+   * @return TranslateMasterInterface|EntityInterface
    */
-  public function addTranslateByLanguage(EntityTranslateChildInterface $child): EntityTranslateMasterInterface
+  public function addTranslateByLanguage(TranslateChildInterface $child): TranslateMasterInterface
   {
     $this->addTranslates($child);
     $this->translatesByLanguage[$child->getLanguage()] = $child;

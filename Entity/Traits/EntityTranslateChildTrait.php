@@ -10,8 +10,8 @@
  
 namespace Austral\EntityTranslateBundle\Entity\Traits;
 
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateChildInterface;
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateMasterInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateChildInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,9 +22,9 @@ trait EntityTranslateChildTrait
 {
 
   /**
-   * @var EntityTranslateMasterInterface
+   * @var TranslateMasterInterface
    */
-  protected EntityTranslateMasterInterface $master;
+  protected TranslateMasterInterface $master;
 
   /**
    * @var string|null
@@ -41,11 +41,11 @@ trait EntityTranslateChildTrait
   /**
    * Set master
    *
-   * @param EntityTranslateMasterInterface $master
+   * @param TranslateMasterInterface $master
    *
-   * @return EntityTranslateChildTrait|EntityTranslateChildInterface
+   * @return EntityTranslateChildTrait|TranslateChildInterface
    */
-  public function setMaster(EntityTranslateMasterInterface $master): EntityTranslateChildInterface
+  public function setMaster(TranslateMasterInterface $master): TranslateChildInterface
   {
     $this->master = $master;
     return $this;
@@ -53,9 +53,9 @@ trait EntityTranslateChildTrait
 
   /**
    * Get master
-   * @return EntityTranslateChildTrait|EntityTranslateMasterInterface
+   * @return EntityTranslateChildTrait|TranslateMasterInterface
    */
-  public function getMaster(): EntityTranslateMasterInterface
+  public function getMaster(): TranslateMasterInterface
   {
     return $this->master;
   }
@@ -74,9 +74,9 @@ trait EntityTranslateChildTrait
    * Set string language
    *
    * @param string|null $language
-   * @return EntityTranslateChildTrait|EntityTranslateChildInterface
+   * @return EntityTranslateChildTrait|TranslateChildInterface
    */
-  public function setLanguage(?string $language): EntityTranslateChildInterface
+  public function setLanguage(?string $language): TranslateChildInterface
   {
     $this->language = $language;
     return $this;
@@ -87,9 +87,9 @@ trait EntityTranslateChildTrait
    *
    * @param bool $isReferent
    *
-   * @return EntityTranslateChildTrait|EntityTranslateChildInterface
+   * @return EntityTranslateChildTrait|TranslateChildInterface
    */
-  public function setIsReferent(bool $isReferent): EntityTranslateChildInterface
+  public function setIsReferent(bool $isReferent): TranslateChildInterface
   {
     $this->isReferent = $isReferent;
     return $this;

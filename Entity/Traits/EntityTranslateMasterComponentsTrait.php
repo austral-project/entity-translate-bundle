@@ -11,8 +11,8 @@
 namespace Austral\EntityTranslateBundle\Entity\Traits;
 
 use Austral\ContentBlockBundle\Entity\Interfaces\ComponentInterface;
-use Austral\ContentBlockBundle\Entity\Interfaces\EntityContentBlockInterface;
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateChildInterface;
+use Austral\EntityBundle\Entity\Interfaces\ComponentsInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateChildInterface;
 use DateTime;
 
 /**
@@ -23,10 +23,10 @@ trait EntityTranslateMasterComponentsTrait
 {
 
   /**
-   * @return EntityTranslateMasterComponentsTrait|EntityContentBlockInterface|EntityTranslateChildInterface
+   * @return EntityTranslateMasterComponentsTrait|ComponentsInterface|TranslateChildInterface
    * @throws \Exception
    */
-  private function getTranslateCurrentComponent(): EntityContentBlockInterface
+  private function getTranslateCurrentComponent(): ComponentsInterface
   {
     return $this->getTranslateCurrent();
   }
@@ -61,10 +61,10 @@ trait EntityTranslateMasterComponentsTrait
   /**
    * @param array $components
    *
-   * @return EntityTranslateMasterComponentsTrait|EntityContentBlockInterface
+   * @return EntityTranslateMasterComponentsTrait|ComponentsInterface
    * @throws \Exception
    */
-  public function setComponents(array $components): EntityContentBlockInterface
+  public function setComponents(array $components): ComponentsInterface
   {
     if($this->getTranslateCurrentComponent())
     {
@@ -76,10 +76,10 @@ trait EntityTranslateMasterComponentsTrait
   /**
    * @param array $componentsTemplate
    *
-   * @return EntityTranslateMasterComponentsTrait|EntityContentBlockInterface
+   * @return EntityTranslateMasterComponentsTrait|ComponentsInterface
    * @throws \Exception
    */
-  public function setComponentsTemplate(array $componentsTemplate): EntityContentBlockInterface
+  public function setComponentsTemplate(array $componentsTemplate): ComponentsInterface
   {
     if($this->getTranslateCurrentComponent())
     {
@@ -121,7 +121,7 @@ trait EntityTranslateMasterComponentsTrait
 
 
   /**
-   * @return EntityTranslateMasterComponentsTrait|EntityContentBlockInterface
+   * @return EntityTranslateMasterComponentsTrait|ComponentsInterface
    * @throws \Exception
    */
   public function getComponentsTemplate(): array
@@ -139,10 +139,10 @@ trait EntityTranslateMasterComponentsTrait
    * @param string $containerName
    * @param ComponentInterface $child
    *
-   * @return EntityTranslateMasterComponentsTrait|EntityContentBlockInterface
+   * @return EntityTranslateMasterComponentsTrait|ComponentsInterface
    * @throws \Exception
    */
-  public function addComponents(string $containerName, ComponentInterface $child): EntityContentBlockInterface
+  public function addComponents(string $containerName, ComponentInterface $child): ComponentsInterface
   {
     if($this->getTranslateCurrentComponent())
     {
@@ -157,10 +157,10 @@ trait EntityTranslateMasterComponentsTrait
    * @param string $containerName
    * @param ComponentInterface $child
    *
-   * @return EntityTranslateMasterComponentsTrait|EntityContentBlockInterface
+   * @return EntityTranslateMasterComponentsTrait|ComponentsInterface
    * @throws \Exception
    */
-  public function removeComponents(string $containerName, ComponentInterface $child):EntityContentBlockInterface
+  public function removeComponents(string $containerName, ComponentInterface $child):ComponentsInterface
   {
     if($this->getTranslateCurrentComponent())
     {
@@ -181,10 +181,10 @@ trait EntityTranslateMasterComponentsTrait
   /**
    * @param DateTime $componentsUpdated
    *
-   * @return $this|EntityContentBlockInterface
+   * @return $this|ComponentsInterface
    * @throws \Exception
    */
-  public function setComponentsUpdated(DateTime $componentsUpdated): EntityContentBlockInterface
+  public function setComponentsUpdated(DateTime $componentsUpdated): ComponentsInterface
   {
     if($this->getTranslateCurrentComponent())
     {

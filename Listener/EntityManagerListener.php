@@ -10,7 +10,7 @@
 
 namespace Austral\EntityTranslateBundle\Listener;
 
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateMasterInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
 
 use Austral\EntityBundle\Entity\EntityInterface;
 use Austral\EntityBundle\Event\EntityManagerEvent;
@@ -31,7 +31,7 @@ class EntityManagerListener
    */
   public function mapping(EntityManagerMappingEvent $mappingAssociationEvent)
   {
-    if(AustralTools::usedImplements($mappingAssociationEvent->getEntityManager()->getClass(),EntityTranslateMasterInterface::class))
+    if(AustralTools::usedImplements($mappingAssociationEvent->getEntityManager()->getClass(),TranslateMasterInterface::class))
     {
       $fieldsMapping = $mappingAssociationEvent->getFieldsMapping();
       $translateField = AustralTools::getValueByKey($fieldsMapping, "translates", array());
@@ -62,10 +62,10 @@ class EntityManagerListener
    */
   public function duplicate(EntityManagerEvent $entityManagerEvent)
   {
-    /** @var EntityInterface|EntityTranslateMasterInterface $sourceObject */
+    /** @var EntityInterface|TranslateMasterInterface $sourceObject */
     if($sourceObject = $entityManagerEvent->getSourceObject())
     {
-      if(AustralTools::usedImplements(get_class($sourceObject), EntityTranslateMasterInterface::class))
+      if(AustralTools::usedImplements(get_class($sourceObject), TranslateMasterInterface::class))
       {
         $entityManagerEvent->getObject()->removeAllTranslates();
         foreach($sourceObject->getTranslates() as $translate)

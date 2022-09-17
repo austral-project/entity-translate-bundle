@@ -18,7 +18,7 @@ use Austral\EntityBundle\Mapping\EntityMapping;
 use Austral\EntityBundle\Mapping\FieldMappingInterface;
 use Austral\EntityTranslateBundle\Mapping\EntityTranslateMapping;
 use Austral\EntityTranslateBundle\Annotation\Translate;
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateMasterInterface;
+use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
 use Doctrine\Persistence\Mapping\MappingException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -111,7 +111,7 @@ class EntityMappingListener
             {
               return $propertyAccessor->getValue($object, $fieldname);
             }
-            elseif($object instanceof EntityTranslateMasterInterface)
+            elseif($object instanceof TranslateMasterInterface)
             {
               if(($currentTranslate = $object->getTranslateCurrent()) && $propertyAccessor->isReadable($currentTranslate, $fieldname))
               {
@@ -127,7 +127,7 @@ class EntityMappingListener
             {
               $propertyAccessor->setValue($object, $fieldname, $value);
             }
-            elseif($object instanceof EntityTranslateMasterInterface)
+            elseif($object instanceof TranslateMasterInterface)
             {
               if(($currentTranslate = $object->getTranslateCurrent()) && $propertyAccessor->isWritable($currentTranslate, $fieldname))
               {

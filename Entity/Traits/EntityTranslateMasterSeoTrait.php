@@ -11,23 +11,24 @@
 namespace Austral\EntityTranslateBundle\Entity\Traits;
 
 use Austral\EntityBundle\Entity\EntityInterface;
-use Austral\EntitySeoBundle\Entity\Interfaces\EntitySeoInterface;
-use Austral\EntitySeoBundle\Entity\Traits\EntitySeoTrait;
-use Austral\EntityTranslateBundle\Entity\Interfaces\EntityTranslateChildInterface;
+use Austral\EntityBundle\Entity\Interfaces\SeoInterface;
+use Austral\SeoBundle\Entity\Traits\EntitySeoTrait;
+use Austral\EntityBundle\Entity\Interfaces\TranslateChildInterface;
 use Exception;
 
 /**
  * Austral Translate Entity Seo To Master Translate Trait.
  * @author Matthieu Beurel <matthieu@austral.dev>
+ * @deprecated
  */
 trait EntityTranslateMasterSeoTrait
 {
 
   /**
-   * @return EntitySeoInterface|EntityInterface|EntityTranslateChildInterface|null
+   * @return SeoInterface|EntityInterface|TranslateChildInterface|null
    * @throws Exception
    */
-  private function getTranslateCurrentSeo(): ?EntitySeoInterface
+  private function getTranslateCurrentSeo(): ?SeoInterface
   {
     return $this->getTranslateCurrent();
   }
@@ -45,10 +46,10 @@ trait EntityTranslateMasterSeoTrait
   /**
    * @param string|null $refH1
    *
-   * @return EntitySeoInterface|EntityTranslateMasterSeoTrait
+   * @return SeoInterface|EntityTranslateMasterSeoTrait
    * @throws Exception
    */
-  public function setRefH1(?string $refH1): EntitySeoInterface
+  public function setRefH1(?string $refH1): SeoInterface
   {
     if($this->getTranslateCurrentSeo())
     {
@@ -79,10 +80,10 @@ trait EntityTranslateMasterSeoTrait
   /**
    * @param string|null $refTitle
    *
-   * @return EntitySeoInterface|EntityTranslateMasterSeoTrait
+   * @return SeoInterface|EntityTranslateMasterSeoTrait
    * @throws Exception
    */
-  public function setRefTitle(?string $refTitle): EntitySeoInterface
+  public function setRefTitle(?string $refTitle): SeoInterface
   {
     if($this->getTranslateCurrentSeo())
     {
@@ -104,10 +105,10 @@ trait EntityTranslateMasterSeoTrait
   /**
    * @param string $refUrl
    *
-   * @return EntitySeoInterface|EntityTranslateMasterSeoTrait
+   * @return SeoInterface|EntityTranslateMasterSeoTrait
    * @throws Exception
    */
-  public function setRefUrl($refUrl): EntitySeoInterface
+  public function setRefUrl($refUrl): SeoInterface
   {
     if($this->getTranslateCurrentSeo())
     {
@@ -129,10 +130,10 @@ trait EntityTranslateMasterSeoTrait
   /**
    * @param string $refUrlLast
    *
-   * @return EntitySeoInterface|EntityTranslateMasterSeoTrait
+   * @return SeoInterface|EntityTranslateMasterSeoTrait
    * @throws Exception
    */
-  public function setRefUrlLast($refUrlLast): EntitySeoInterface
+  public function setRefUrlLast($refUrlLast): SeoInterface
   {
     if($this->getTranslateCurrentSeo())
     {
@@ -154,10 +155,10 @@ trait EntityTranslateMasterSeoTrait
   /**
    * @param string $refDescription
    *
-   * @return EntitySeoInterface|EntityTranslateMasterSeoTrait
+   * @return SeoInterface|EntityTranslateMasterSeoTrait
    * @throws Exception
    */
-  public function setRefDescription($refDescription): EntitySeoInterface
+  public function setRefDescription($refDescription): SeoInterface
   {
     if($this->getTranslateCurrentSeo())
     {
@@ -179,10 +180,10 @@ trait EntityTranslateMasterSeoTrait
   /**
    * @param string $canonical
    *
-   * @return EntitySeoInterface|EntityTranslateMasterSeoTrait
+   * @return SeoInterface|EntityTranslateMasterSeoTrait
    * @throws Exception
    */
-  public function setCanonical($canonical): EntitySeoInterface
+  public function setCanonical($canonical): SeoInterface
   {
     if($this->getTranslateCurrentSeo())
     {
@@ -220,10 +221,10 @@ trait EntityTranslateMasterSeoTrait
   /**
    * @param string|null $bodyClass
    *
-   * @return EntitySeoInterface|EntityTranslateMasterSeoTrait
+   * @return SeoInterface|EntityTranslateMasterSeoTrait
    * @throws Exception
    */
-  public function setBodyClass(?string $bodyClass): EntitySeoInterface
+  public function setBodyClass(?string $bodyClass): SeoInterface
   {
     if($this->getTranslateCurrentSeo())
     {
@@ -233,9 +234,9 @@ trait EntityTranslateMasterSeoTrait
   }
 
   /**
-   * @return EntitySeoInterface
+   * @return SeoInterface
    */
-  public function getHomepage(): EntitySeoInterface
+  public function getHomepage(): SeoInterface
   {
     if(method_exists($this, "getIsHomepage") && $this->getIsHomepage())
     {
