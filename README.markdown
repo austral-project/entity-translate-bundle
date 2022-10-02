@@ -16,7 +16,7 @@ composer require austral/entity-translate-bundle
 ```
 
 ## Documentation
-See documentation on the [official website](https://austral.dev/bundles/entity-translate-bundle)
+See documentation on the [official website](https://austral.dev/en/bundles/entity-translate-bundle)
 
 ## Commit Messages
 
