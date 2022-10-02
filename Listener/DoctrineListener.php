@@ -64,7 +64,7 @@ class DoctrineListener implements EventSubscriber
    */
   public function getCurrentLanguage(): ?string
   {
-    if($this->httpRequest) {
+    if($this->httpRequest && $this->httpRequest->getLanguage()) {
       return $this->httpRequest->getLanguage();
     }
     elseif($this->request && (
