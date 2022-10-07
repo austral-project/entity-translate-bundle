@@ -39,7 +39,7 @@ class DoctrineListener implements EventSubscriber
   /**
    * DoctrineListener constructor.
    */
-  public function __construct(?HttpRequest $httpRequest)
+  public function __construct(?HttpRequest $httpRequest = null)
   {
       $parts = explode('\\', $this->getNamespace());
       $this->name = end($parts);
