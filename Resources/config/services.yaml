@@ -17,6 +17,13 @@ services:
       - { name: kernel.event_listener, event: "austral.entity_manager.duplicate", method: duplicate, priority: 1000 }
       - { name: kernel.event_listener, event: "austral.entity_manager.mapping_association", method: mapping }
 
+  austral.entity_translate.elastic_search.listener:
+    class:          Austral\EntityTranslateBundle\Listener\ElasticSearchListener
+    arguments:      ["@austral.entity.mapping"]
+    tags:
+      - { name: kernel.event_listener, event: "austral.elastic_search.select.objects.query_builder", method: queryBuilder }
+      - { name: kernel.event_listener, event: "austral.elastic_search.select.objects", method: objects }
+
   austral.entity_translate.entity_mapping.listener:
     class:          Austral\EntityTranslateBundle\Listener\EntityMappingListener
     tags:
