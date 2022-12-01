@@ -60,15 +60,16 @@ trait EntityTranslateMasterComponentsTrait
 
   /**
    * @param array $components
+   * @param bool $updated
    *
    * @return EntityTranslateMasterComponentsTrait|ComponentsInterface
    * @throws \Exception
    */
-  public function setComponents(array $components): ComponentsInterface
+  public function setComponents(array $components, bool $updated = true): ComponentsInterface
   {
     if($this->getTranslateCurrentComponent())
     {
-      $this->getTranslateCurrentComponent()->setComponents($components);
+      $this->getTranslateCurrentComponent()->setComponents($components, $updated);
     }
     return $this;
   }
