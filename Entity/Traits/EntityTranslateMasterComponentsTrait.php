@@ -89,6 +89,21 @@ trait EntityTranslateMasterComponentsTrait
     return $this;
   }
 
+  /**
+   * @param array $componentsTemplateByTypes
+   *
+   * @return EntityTranslateMasterComponentsTrait|ComponentsInterface
+   * @throws \Exception
+   */
+  public function setComponentsTemplateByTypes(array $componentsTemplateByTypes): ComponentsInterface
+  {
+    if($this->getTranslateCurrentComponent())
+    {
+      $this->getTranslateCurrentComponent()->setComponentsTemplateByTypes($componentsTemplateByTypes);
+    }
+    return $this;
+  }
+
 
   /**
    * @param string $containerName
@@ -130,6 +145,20 @@ trait EntityTranslateMasterComponentsTrait
     if($this->getTranslateCurrentComponent())
     {
       return $this->getTranslateCurrentComponent()->getComponentsTemplate();
+    }
+    return array();
+  }
+
+
+  /**
+   * @return EntityTranslateMasterComponentsTrait|ComponentsInterface
+   * @throws \Exception
+   */
+  public function getComponentsTemplateByTypes(): array
+  {
+    if($this->getTranslateCurrentComponent())
+    {
+      return $this->getTranslateCurrentComponent()->getComponentsTemplateByTypes();
     }
     return array();
   }
