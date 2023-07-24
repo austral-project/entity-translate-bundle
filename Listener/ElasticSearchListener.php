@@ -45,7 +45,10 @@ class ElasticSearchListener
     $entityMapping = $this->mapping->getEntityMapping($elasticSearchSelectObjectsEvent->getEntityClass());
     if($entityMapping && $entityMapping->getEntityClassMapping(EntityTranslateMapping::class))
     {
-      $elasticSearchSelectObjectsEvent->getQueryBuilder()->leftJoin("root.translates", "translates")->addSelect("translates");
+      if(!$elasticSearchSelectObjectsEvent->getIsCount())
+      {
+        $elasticSearchSelectObjectsEvent->getQueryBuilder()->leftJoin("root.translates", "translates")->addSelect("translates");
+      }
     }
   }
 
