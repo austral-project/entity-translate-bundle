@@ -1,6 +1,8 @@
 services:
   _defaults:
-    public:       true
+    autowire:       true
+    autoconfigure:  true
+    public:         true
 
   austral.entity_translate.doctrine.listener:
     class:          Austral\EntityTranslateBundle\Listener\DoctrineListener
