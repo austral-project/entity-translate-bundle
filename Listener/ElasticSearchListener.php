@@ -12,6 +12,7 @@ namespace Austral\EntityTranslateBundle\Listener;
 
 
 use Austral\ElasticSearchBundle\Event\ElasticSearchSelectObjectsEvent;
+use Austral\ElasticSearchBundle\Model\Result;
 use Austral\EntityBundle\Entity\EntityInterface;
 use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
 use Austral\EntityBundle\Mapping\EntityMapping;
@@ -75,8 +76,9 @@ class ElasticSearchListener
           $objectByLanguage = clone $object;
           $objectByLanguage->setCurrentLanguage($translate->getLanguage());
           $objectToHydrateClone->setObject($object);
+          $objectToHydrateClone->addValuesParameters(Result::VALUE_LANGUAGE, $translate->getLanguage());
           $objectToHydrateClone->setElasticSearchId(sprintf("%s_%s", $objectToHydrate->getElasticSearchId(), $translate->getLanguage()));
-          $objectsToHydrate[$objectToHydrateClone->getElasticSearchId()] = $objectToHydrate;
+          $objectsToHydrate[$objectToHydrateClone->getElasticSearchId()] = $objectToHydrateClone;
         }
       }
       $elasticSearchSelectObjectsEvent->setObjectsToHydrate($objectsToHydrate);
