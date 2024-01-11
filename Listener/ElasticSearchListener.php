@@ -75,7 +75,7 @@ class ElasticSearchListener
           $objectToHydrateClone = clone $objectToHydrate;
           $objectByLanguage = clone $object;
           $objectByLanguage->setCurrentLanguage($translate->getLanguage());
-          $objectToHydrateClone->setObject($object);
+          $objectToHydrateClone->setObject($objectByLanguage);
           $objectToHydrateClone->addValuesParameters(Result::VALUE_LANGUAGE, $translate->getLanguage());
           $objectToHydrateClone->setElasticSearchId(sprintf("%s_%s", $objectToHydrate->getElasticSearchId(), $translate->getLanguage()));
           $objectsToHydrate[$objectToHydrateClone->getElasticSearchId()] = $objectToHydrateClone;
