@@ -60,14 +60,41 @@ trait EntityTranslateMasterTrait
    * @return mixed
    * @throws \Exception
    */
-  public function __get(string $name)
+  public function __get(string $name): mixed
   {
     $fieldKey = $name;
+    $getter = AustralTools::createGetterFunction($fieldKey);
+    if(method_exists($this, $fieldKey) || method_exists($this, $getter))
+    {
+      return method_exists($this, $fieldKey) ? $this->$fieldKey() : $this->$getter();
+    }
     if(!$translate = $this->getTranslateCurrent())
     {
       $translate = $this->createNewTranslateByLanguage();
     }
     return $this->getTranslateValueByKey($translate, $fieldKey);
+  }
+
+  /**
+   * @param string $name
+   *
+   * @return mixed
+   * @throws \Exception
+   */
+  public function __isset(string $name): bool
+  {
+    $fieldKey = $name;
+    $getter = AustralTools::createGetterFunction($fieldKey);
+    $return = method_exists($this, $fieldKey) || method_exists($this, $getter);
+    if(!$return)
+    {
+      if(!$translate = $this->getTranslateCurrent())
+      {
+        $translate = $this->createNewTranslateByLanguage();
+      }
+      $return = method_exists($translate, $fieldKey) || method_exists($translate, $getter);
+    }
+    return $return;
   }
 
   /**
@@ -80,6 +107,11 @@ trait EntityTranslateMasterTrait
   public function __set(string $name, $value)
   {
     $fieldKey = $name;
+    $setter = AustralTools::createSetterFunction($fieldKey);
+    if(method_exists($this, $fieldKey) || method_exists($this, $setter))
+    {
+      return method_exists($this, $fieldKey) ? $this->$fieldKey($value) : $this->$setter($value);
+    }
     if(!$translate = $this->getTranslateCurrent())
     {
       $translate = $this->createNewTranslateByLanguage();
@@ -120,7 +152,6 @@ trait EntityTranslateMasterTrait
     if($this->translates->contains($translate))
     {
       $this->translates->removeElement($translate);
-      $translate->setMaster(null);
     }
     return $this;
   }
@@ -182,12 +213,8 @@ trait EntityTranslateMasterTrait
    */
   public function getTranslateValueByKey(TranslateChildInterface $translate, $fieldKey)
   {
-    if(method_exists($translate, $fieldKey))
-    {
-      return $translate->$fieldKey();
-    }
     $getter = AustralTools::createGetterFunction($fieldKey);
-    return $translate->$getter();
+    return method_exists($translate, $fieldKey) ? $translate->$fieldKey() : $translate->$getter();
   }
 
   /**
