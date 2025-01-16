@@ -198,11 +198,36 @@ trait EntityTranslateMasterTrait
    *
    * @return TranslateMasterInterface|EntityInterface
    */
+  public function setLanguageCurrent(?string $value): TranslateMasterInterface
+  {
+    $this->initTranslateNotDefinedLanguage($value);
+    $this->languageCurrent = $value;
+    return $this;
+  }
+
+  /**
+   * @param string|null $value
+   *
+   * @return TranslateMasterInterface|EntityInterface
+   */
   public function setCurrentLanguage(?string $value): TranslateMasterInterface
   {
+    $this->initTranslateNotDefinedLanguage($value);
     $this->languageCurrent = $value;
     $this->translateCurrent = null;
     return $this;
+  }
+
+  protected function initTranslateNotDefinedLanguage(?string $language)
+  {
+    if($this->languageCurrent == "not_defined" && $language)
+    {
+      $currentTranslate = $this->getTranslateCurrent();
+      $currentTranslate->setLanguage($language);
+      $this->translateCurrent = $currentTranslate;
+      unset($this->translatesByLanguage["not_defined"]);
+      $this->translatesByLanguage[$currentTranslate->getLanguage()] = $currentTranslate;
+    }
   }
 
   /**
@@ -284,6 +309,10 @@ trait EntityTranslateMasterTrait
       if($this->languageCurrent)
       {
         $this->translateCurrent = $this->getTranslateByLanguage($this->languageCurrent);
+      }
+      else
+      {
+        $this->languageCurrent = "not_defined";
       }
 
       if($translateReferent = $this->getTranslateReferent())

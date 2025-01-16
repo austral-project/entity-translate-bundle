@@ -24,7 +24,7 @@ trait EntityTranslateMasterFileCropperTrait
    * @return EntityFileCropperTrait|EntityInterface|TranslateChildInterface
    * @throws \Exception
    */
-  private function getTranslateCurrentCropper(): EntityInterface
+  private function getTranslateCurrentCropper(): ?EntityInterface
   {
     return $this->getTranslateCurrent();
   }
