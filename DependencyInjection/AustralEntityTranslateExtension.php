@@ -26,7 +26,7 @@ class AustralEntityTranslateExtension extends Extension
   /**
    * {@inheritdoc}
    */
-  public function load(array $configs, ContainerBuilder $container)
+  public function load(array $configs, ContainerBuilder $container): void
   {
     $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
     $loader->load('services.yaml');
@@ -35,7 +35,7 @@ class AustralEntityTranslateExtension extends Extension
   /**
    * @return string
    */
-  public function getNamespace()
+  public function getNamespace(): string
   {
     return 'https://austral.dev/schema/dic/austral_entity_translate';
   }
