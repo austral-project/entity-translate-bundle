@@ -13,6 +13,7 @@ namespace Austral\EntityTranslateBundle\Listener;
 
 use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
 use Austral\HttpBundle\Services\HttpRequest;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\Common\EventArgs;
 use Doctrine\Common\EventSubscriber;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @author Matthieu Beurel <matthieu@austral.dev>
  * @final
  */
+#[AsDoctrineListener(event: 'postLoad', connection: 'default')]
 class DoctrineListener implements EventSubscriber
 {
 
