@@ -48,7 +48,9 @@ class ElasticSearchListener
     {
       if(!$elasticSearchSelectObjectsEvent->getIsCount())
       {
-        $elasticSearchSelectObjectsEvent->getQueryBuilder()->leftJoin("root.translates", "translates")->addSelect("translates");
+        if (!in_array('translates', $elasticSearchSelectObjectsEvent->getQueryBuilder()->getAllAliases(), true)) {
+          $elasticSearchSelectObjectsEvent->getQueryBuilder()->leftJoin('root.translates', 'translates')->addSelect("translates");
+        }
       }
     }
   }
