@@ -1,32 +1,52 @@
 {
-  "name":                                     "austral/entity-translate-bundle",
-  "type":                                     "symfony-bundle",
-  "description":                              "Translate Entity bundle to Symfony",
-  "keywords":                                 ["Austral", "Translate Entity", "I18n", "Symfony"],
-  "license":                                  "MIT",
-  "homepage":                                 "https://austral.dev",
-  "authors": [
-    {
-      "name":                                 "Matthieu Beurel",
-      "email":                                "matthieu@austral.dev",
-      "role":                                 "Developer"
+    "name": "austral/entity-translate-bundle",
+    "type": "symfony-bundle",
+    "description": "Translate Entity bundle to Symfony",
+    "keywords": [
+        "Austral",
+        "Translate Entity",
+        "I18n",
+        "Symfony"
+    ],
+    "license": "MIT",
+    "homepage": "https://austral.dev",
+    "authors": [
+        {
+            "name": "Matthieu Beurel",
+            "email": "matthieu@austral.dev",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.2 <9.0",
+        "austral/contracts": "^4.0",
+        "austral/tools-bundle": "^4.0",
+        "austral/entity-bundle": "^4.0",
+        "symfony/config": "^7.4"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Austral\\EntityTranslateBundle\\": ""
+        }
+    },
+    "scripts": {
+        "test": "php -d assert.exception=1 vendor/bin/phpunit",
+        "stan": "vendor/bin/phpstan analyse",
+        "rector": "vendor/bin/rector process --ansi"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "symfony": {
+            "allow-contrib": true
+        }
     }
-  ],
-  "require": {
-    "php":                                    "^8.0 || ^8.1 || ^8.2",
-
-    "austral/tools-bundle":                   "^3.1",
-    "austral/entity-bundle":                  "^3.1",
-
-    "symfony/config":                         "^5.4 || ^6.4"
-  },
-  "config": {
-    "sort-packages":                          true
-  },
-  "require-dev": {
-  },
-  "autoload": {
-    "psr-4": { "Austral\\EntityTranslateBundle\\": "" }
-  },
-  "minimum-stability":                        "dev"
 }

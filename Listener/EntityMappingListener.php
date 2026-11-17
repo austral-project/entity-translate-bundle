@@ -11,75 +11,76 @@
 namespace Austral\EntityTranslateBundle\Listener;
 
 
-use Austral\EntityBundle\Entity\EntityInterface;
+use Austral\Contracts\Entity\EntityInterface;
 use Austral\EntityBundle\Event\EntityMappingEvent;
-use Austral\EntityBundle\EntityAnnotation\EntityAnnotations;
+use Austral\EntityBundle\EntityAttributes\EntityAttributes;
 use Austral\EntityBundle\Mapping\EntityMapping;
-use Austral\EntityBundle\Mapping\FieldMappingInterface;
 use Austral\EntityTranslateBundle\Mapping\EntityTranslateMapping;
-use Austral\EntityTranslateBundle\Annotation\Translate;
-use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
+use Austral\EntityTranslateBundle\Attribute\Translate;
+use Austral\Contracts\Translate\TranslateMasterInterface;
 use Doctrine\Persistence\Mapping\MappingException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Austral Annotation Listener.
+ * Austral Attribute Listener.
+ * @template T of object
+ *
  * @author Matthieu Beurel <matthieu@austral.dev>
  */
 class EntityMappingListener
 {
 
   /**
-   * @var array
+   * @var array<class-string, array<string, mixed>>
    */
-  protected array $annotationsWithTranslate = array();
+  protected array $attributesWithTranslate = [];
 
   /**
-   * @param EntityMappingEvent $entityMappingEvent
+   * @param EntityMappingEvent<T> $entityMappingEvent
    *
    * @return void
    * @throws MappingException
    * @throws \ReflectionException
    */
-  public function mapping(EntityMappingEvent $entityMappingEvent)
+  public function mapping(EntityMappingEvent $entityMappingEvent): void
   {
-    $entitiesAnnotations = $entityMappingEvent->getEntitiesAnnotations();
+    $entitiesAttributes = $entityMappingEvent->getEntitiesAttributes();
     /**
-     * @var string $entityClassname
-     * @var EntityAnnotations $entityAnnotation
+     * @var EntityAttributes<T> $entityAttribute
      */
-    foreach($entitiesAnnotations->all() as $entityAnnotation)
+    foreach($entitiesAttributes->all() as $entityAttribute)
     {
-      foreach($entityAnnotation->getClassAnnotations() as $annotation)
+      foreach($entityAttribute->getClassAttributes() as $attribute)
       {
-        if($annotation instanceof Translate)
+        if($attribute instanceof Translate)
         {
-          if($reelMetadata = $entitiesAnnotations->getEntityManager()->getMetadataFactory()->getMetadataFor($annotation->relationClass))
+          $reelMetadata = $entitiesAttributes->getEntityManager()->getDoctrineEntityManager()->getMetadataFactory()->getMetadataFor($attribute->relationClass);
+          $attribute->relationClass = $reelMetadata->getName();
+          if($entityAttributeTranslate = $entitiesAttributes->getEntityAttributes($attribute->relationClass))
           {
-            $annotation->relationClass = $reelMetadata->getName();
-            if($entityAnnotationTranslate = $entitiesAnnotations->getEntityAnnotations($annotation->relationClass))
+            $entityAttribute->addClassAttributes($entityAttributeTranslate->getClassAttributes());
+            $entityAttribute->addFieldsAttributes($entityAttributeTranslate->getFieldsAttributes());
+            if(($entityAttribute->getClassAttributes() || $entityAttribute->getFieldsAttributes()) && !$entityMappingEvent->getMapping()->getEntityMapping($entityAttribute->getClassname()))
             {
-              $entityAnnotation->addClassAnnotations($entityAnnotationTranslate->getClassAnnotations());
-              $entityAnnotation->addFieldsAnnotations($entityAnnotationTranslate->getFieldsAnnotations());
-              if(($entityAnnotation->getClassAnnotations() || $entityAnnotation->getFieldsAnnotations()) && !$entityMappingEvent->getMapping()->getEntityMapping($entityAnnotation->getClassname()))
-              {
-                $entityMappingEvent->getMapping()->addEntityMapping($entityAnnotation->getClassname(), new EntityMapping($entityAnnotation->getClassname(), $entityAnnotation->getSlugger()));
-              }
-              $this->annotationsWithTranslate[$entityAnnotation->getClassname()] = array(
-                "fields" =>  $entityAnnotationTranslate->getFieldsAnnotations(),
-                "class" =>  $entityAnnotationTranslate->getClassAnnotations()
-              );
-              $entitiesAnnotations->removeEntityAnnotations($annotation->relationClass);
-
-              $entityTranslateMapping = new EntityTranslateMapping();
-              $entityTranslateMapping->setMasterClass($entityAnnotation->getClassname());
-              $entityTranslateMapping->setTranslateClass($annotation->relationClass);
-              if(!$entityMapping = $entityMappingEvent->getMapping()->getEntityMapping($entityAnnotation->getClassname()))
-              {
-                $entityMapping = new EntityMapping($entityAnnotation->getClassname(), $entityAnnotation->getSlugger());
-              }
-              $entityMapping->addEntityClassMapping($entityTranslateMapping);
+              $entityMappingEvent->getMapping()->addEntityMapping($entityAttribute->getClassname(), new EntityMapping($entityAttribute->getClassname(), $entityAttribute->getSlugger()));
             }
+            $this->attributesWithTranslate[$entityAttribute->getClassname()] = array(
+              "fields" =>  $entityAttributeTranslate->getFieldsAttributes(),
+              "class" =>  $entityAttributeTranslate->getClassAttributes()
+            );
+            $entitiesAttributes->removeEntityAttributes($attribute->relationClass);
+
+            /** @var EntityTranslateMapping<T> $entityTranslateMapping */
+            $entityTranslateMapping = new EntityTranslateMapping(
+              $entityAttribute->getClassname(),
+              $attribute->relationClass
+            );
+            if(!$entityMapping = $entityMappingEvent->getMapping()->getEntityMapping($entityAttribute->getClassname()))
+            {
+              $entityMapping = new EntityMapping($entityAttribute->getClassname(), $entityAttribute->getSlugger());
+              $entityMappingEvent->getMapping()->addEntityMapping($entityAttribute->getClassname(), $entityMapping);
+            }
+            $entityMapping->addEntityClassMapping($entityTranslateMapping);
           }
         }
       }
@@ -87,22 +88,18 @@ class EntityMappingListener
   }
 
   /**
-   * @param EntityMappingEvent $entityMappingEvent
+   * @param EntityMappingEvent<T> $entityMappingEvent
    *
    * @return void
    */
-  public function mappingAfter(EntityMappingEvent $entityMappingEvent)
+  public function mappingAfter(EntityMappingEvent $entityMappingEvent): void
   {
-    /**
-     * @var string $entityClassname
-     * @var array $annotationsByType
-     */
-    foreach ($this->annotationsWithTranslate as $entityClassname => $annotationsByType)
+    foreach ($this->attributesWithTranslate as $entityClassname => $attributesByType)
     {
-      foreach($annotationsByType["fields"] as $fieldname => $annotations)
+      foreach($attributesByType["fields"] as $fieldname => $attributes)
       {
-        $fieldsMapping = $entityMappingEvent->getMapping()->getEntityMapping($entityClassname)->getAllFieldsMappingClassByFieldname($fieldname);
-        /** @var FieldMappingInterface $fieldMapping */
+        $fieldsMapping = $entityMappingEvent->getMapping()->getEntityMapping($entityClassname)?->getAllFieldsMappingClassByFieldname($fieldname);
+        $fieldsMapping = is_array($fieldsMapping) ? $fieldsMapping : [];
         foreach($fieldsMapping as $fieldMapping)
         {
           $fieldMapping->addGetterObjectValueFonction(function(EntityInterface $object, $fieldname) {

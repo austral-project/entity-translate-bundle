@@ -4,34 +4,24 @@ services:
     autoconfigure:  true
     public:         true
 
-  Austral\EntityTranslateBundle\Listener\DoctrineListener:  "@austral.entity_translate.doctrine.listener"
-  austral.entity_translate.doctrine.listener:
-    class:          Austral\EntityTranslateBundle\Listener\DoctrineListener
-    arguments:      ["@?austral.http.request"]
+  Austral\EntityTranslateBundle\Listener\DoctrineListener:
     calls:
       - [ setRequestStack, [ "@request_stack" ] ]
     tags:
-      - { name: doctrine.event_subscriber, connection: default }
+      - { name: doctrine.event_listener, event: postLoad }
+  austral.entity_translate.doctrine.listener:
+    alias:          Austral\EntityTranslateBundle\Listener\DoctrineListener
 
-  Austral\EntityTranslateBundle\Listener\EntityManagerListener: "@austral.entity_translate.entity_manager.listener"
-  austral.entity_translate.entity_manager.listener:
-    class:          Austral\EntityTranslateBundle\Listener\EntityManagerListener
-    arguments:      ["@event_dispatcher"]
+  Austral\EntityTranslateBundle\Listener\EntityManagerListener:
     tags:
       - { name: kernel.event_listener, event: "austral.entity_manager.duplicate", method: duplicate, priority: 1000 }
       - { name: kernel.event_listener, event: "austral.entity_manager.mapping_association", method: mapping }
+  austral.entity_translate.entity_manager.listener:
+    alias:          Austral\EntityTranslateBundle\Listener\EntityManagerListener
 
-  Austral\EntityTranslateBundle\Listener\ElasticSearchListener: "@austral.entity_translate.elastic_search.listener"
-  austral.entity_translate.elastic_search.listener:
-    class:          Austral\EntityTranslateBundle\Listener\ElasticSearchListener
-    arguments:      ["@austral.entity.mapping"]
-    tags:
-      - { name: kernel.event_listener, event: "austral.elastic_search.select.objects.query_builder", method: queryBuilder }
-      - { name: kernel.event_listener, event: "austral.elastic_search.select.objects", method: objects }
-
-  Austral\EntityTranslateBundle\Listener\EntityMappingListener: "@austral.entity_translate.entity_mapping.listener"
-  austral.entity_translate.entity_mapping.listener:
-    class:          Austral\EntityTranslateBundle\Listener\EntityMappingListener
+  Austral\EntityTranslateBundle\Listener\EntityMappingListener:
     tags:
       - { name: kernel.event_listener, event: "austral.event.entity.initialise.mapping", method: mapping, priority: 2048 }
       - { name: kernel.event_listener, event: "austral.event.entity.initialise.mapping", method: mappingAfter, priority: -2048 }
+  austral.entity_translate.entity_mapping.listener:
+    alias:          Austral\EntityTranslateBundle\Listener\EntityMappingListener

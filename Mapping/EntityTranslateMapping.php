@@ -11,49 +11,41 @@
 namespace Austral\EntityTranslateBundle\Mapping;
 
 use Austral\EntityBundle\Mapping\EntityClassMapping;
+use Austral\EntityBundle\Mapping\EntityClassMappingInterface;
 
 /**
  * Austral EntityTranslateMapping.
+ * @template T of object
+ *
+ * @extends EntityClassMapping<T>
+ * @implements EntityClassMappingInterface<T>
+ *
  * @author Matthieu Beurel <matthieu@austral.dev>
  * @final
  */
-final Class EntityTranslateMapping extends EntityClassMapping
+final Class EntityTranslateMapping extends EntityClassMapping implements EntityClassMappingInterface
 {
 
   /**
-   * @var string
-   */
-  protected string $translateClass;
-
-  /**
-   * @var string
+   * @var class-string
    */
   protected string $masterClass;
 
   /**
-   * Constructor.
+   * @var class-string
    */
-  public function __construct()
-  {
-  }
+  protected string $translateClass;
 
   /**
-   * @return string
-   */
-  public function getTranslateClass(): string
-  {
-    return $this->translateClass;
-  }
-
-  /**
-   * @param string $translateClass
+   * EntityTranslateMapping constructor
    *
-   * @return $this
+   * @param class-string $translateClass
+   * @param class-string $masterClass
    */
-  public function setTranslateClass(string $translateClass): EntityTranslateMapping
+  public function __construct(string $masterClass, string $translateClass)
   {
+    $this->masterClass = $masterClass;
     $this->translateClass = $translateClass;
-    return $this;
   }
 
   /**
@@ -65,13 +57,32 @@ final Class EntityTranslateMapping extends EntityClassMapping
   }
 
   /**
-   * @param string $masterClass
+   * @param class-string $masterClass
    *
    * @return $this
    */
-  public function setMasterClass(string $masterClass): EntityTranslateMapping
+  public function setMasterClass(string $masterClass): self
   {
     $this->masterClass = $masterClass;
+    return $this;
+  }
+
+  /**
+   * @return class-string
+   */
+  public function getTranslateClass(): string
+  {
+    return $this->translateClass;
+  }
+
+  /**
+   * @param class-string $translateClass
+   *
+   * @return $this
+   */
+  public function setTranslateClass(string $translateClass): self
+  {
+    $this->translateClass = $translateClass;
     return $this;
   }
 

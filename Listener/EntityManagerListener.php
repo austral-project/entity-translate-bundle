@@ -10,9 +10,9 @@
 
 namespace Austral\EntityTranslateBundle\Listener;
 
-use Austral\EntityBundle\Entity\Interfaces\TranslateMasterInterface;
+use Austral\Contracts\Translate\TranslateChildInterface;
+use Austral\Contracts\Translate\TranslateMasterInterface;
 
-use Austral\EntityBundle\Entity\EntityInterface;
 use Austral\EntityBundle\Event\EntityManagerEvent;
 use Austral\EntityBundle\Event\EntityManagerMappingEvent;
 
@@ -20,6 +20,8 @@ use Austral\ToolsBundle\AustralTools;
 
 /**
  * Austral EntityManager Listener.
+ * @template T of object
+ *
  * @author Matthieu Beurel <matthieu@austral.dev>
  * @final
  */
@@ -27,15 +29,15 @@ class EntityManagerListener
 {
 
   /**
-   * @param EntityManagerMappingEvent $mappingAssociationEvent
+   * @param EntityManagerMappingEvent<T> $mappingAssociationEvent
    */
-  public function mapping(EntityManagerMappingEvent $mappingAssociationEvent)
+  public function mapping(EntityManagerMappingEvent $mappingAssociationEvent): void
   {
-    if(AustralTools::usedImplements($mappingAssociationEvent->getEntityManager()->getClass(),TranslateMasterInterface::class))
+    if(($entityClass = $mappingAssociationEvent->getEntityManager()->getClass()) && is_a($entityClass, TranslateMasterInterface::class, true))
     {
       $fieldsMapping = $mappingAssociationEvent->getFieldsMapping();
-      $translateField = AustralTools::getValueByKey($fieldsMapping, "translates", array());
-      if($translateTargetEntity = AustralTools::getValueByKey($translateField, "targetEntity", null))
+      $translateField = AustralTools::valueByKey($fieldsMapping, "translates", []);
+      if($translateTargetEntity = AustralTools::valueByKey($translateField, "targetEntity", null))
       {
         $em = $mappingAssociationEvent->getEntityManager()->getDoctrineEntityManager();
         $fieldsInTranslateEntity = $em->getClassMetadata($translateTargetEntity)->fieldMappings;
@@ -57,21 +59,26 @@ class EntityManagerListener
   }
 
   /**
-   * @param EntityManagerEvent $entityManagerEvent
+   * @param EntityManagerEvent<T> $entityManagerEvent
    * @throws \Exception
    */
-  public function duplicate(EntityManagerEvent $entityManagerEvent)
+  public function duplicate(EntityManagerEvent $entityManagerEvent): void
   {
-    /** @var EntityInterface|TranslateMasterInterface $sourceObject */
     if($sourceObject = $entityManagerEvent->getSourceObject())
     {
-      if(AustralTools::usedImplements(get_class($sourceObject), TranslateMasterInterface::class))
+      if(is_a($sourceObject, TranslateMasterInterface::class, true))
       {
-        $entityManagerEvent->getObject()->removeAllTranslates();
+        /** @var TranslateMasterInterface<T> $object */
+        $object = $entityManagerEvent->getObject();
+        $object->removeAllTranslates();
+
+        /** @var TranslateChildInterface<T> $translate */
         foreach($sourceObject->getTranslates() as $translate)
         {
+          /** @var TranslateChildInterface<T> $duplicateTranslate */
           $duplicateTranslate = $entityManagerEvent->getEntityManager()->duplicate($translate);
-          $entityManagerEvent->getObject()->addTranslateByLanguage($duplicateTranslate);
+          $object->addTranslateByLanguage($duplicateTranslate);
+
           $entityManagerEvent->getEntityManager()->update($duplicateTranslate, false);
         }
       }
