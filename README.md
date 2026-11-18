@@ -2,9 +2,9 @@
 
 [![Version](https://img.shields.io/packagist/v/austral/entity-translate-bundle?label=version)](https://packagist.org/packages/austral/entity-translate-bundle)
 [![CI](https://github.com/austral-project/entity-translate-bundle/actions/workflows/ci.yml/badge.svg?branch=4.x)](https://github.com/austral-project/entity-translate-bundle/actions/workflows/ci.yml)
-[![PHP](https://img.shields.io/packagist/dependency-v/austral/entity-translate-bundle/php)](https://packagist.org/packages/austral/entity-translate-bundle)
+[![PHP](https://img.shields.io/packagist/dependency-v/austral/entity-translate-bundle/php?version=4.x-dev)](https://packagist.org/packages/austral/entity-translate-bundle)
 [![Symfony](https://img.shields.io/badge/symfony-7.4-black)](https://symfony.com/releases/7.4)
-[![License](https://img.shields.io/packagist/l/austral/entity-translate-bundle)](LICENSE)
+[![License](https://img.shields.io/github/license/austral-project/entity-translate-bundle)](LICENSE)
 
 Translate Entity bundle to Symfony
 
