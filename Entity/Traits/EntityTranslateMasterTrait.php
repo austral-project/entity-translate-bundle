@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
- 
+
 namespace Austral\EntityTranslateBundle\Entity\Traits;
 
 use Austral\EntityBundle\Entity\Entity;
@@ -54,9 +54,9 @@ trait EntityTranslateMasterTrait
   protected array $translatesByLanguage = [];
 
   /**
-   * @return $this
+   * @return TranslateChildInterface
    */
-  abstract public function createNewTranslateByLanguage(): self;
+  abstract public function createNewTranslateByLanguage(): TranslateChildInterface;
 
   /** @return TranslateMasterInterface */
   private function asMaster(): TranslateMasterInterface
