@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Austral EntityTranslate Bundle package.
  *
@@ -15,17 +16,19 @@ use Austral\EntityBundle\Mapping\EntityClassMappingInterface;
 
 /**
  * Austral EntityTranslateMapping.
+ *
  * @template T of object
  *
  * @extends EntityClassMapping<T>
+ *
  * @implements EntityClassMappingInterface<T>
  *
  * @author Matthieu Beurel <matthieu@austral.dev>
+ *
  * @final
  */
-final Class EntityTranslateMapping extends EntityClassMapping implements EntityClassMappingInterface
+final class EntityTranslateMapping extends EntityClassMapping implements EntityClassMappingInterface
 {
-
   /**
    * @var class-string
    */
@@ -64,6 +67,7 @@ final Class EntityTranslateMapping extends EntityClassMapping implements EntityC
   public function setMasterClass(string $masterClass): self
   {
     $this->masterClass = $masterClass;
+
     return $this;
   }
 
@@ -83,7 +87,7 @@ final Class EntityTranslateMapping extends EntityClassMapping implements EntityC
   public function setTranslateClass(string $translateClass): self
   {
     $this->translateClass = $translateClass;
+
     return $this;
   }
-
 }

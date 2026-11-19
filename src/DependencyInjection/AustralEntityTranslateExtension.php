@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Austral EntityTranslate Bundle package.
  *
@@ -15,16 +16,18 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-
 /**
  * Austral EntityTranslate Extension.
+ *
  * @author Matthieu Beurel <matthieu@austral.dev>
+ *
  * @final
  */
 class AustralEntityTranslateExtension extends Extension
 {
   /**
    * {@inheritdoc}
+   *
    * @throws \Exception
    */
   public function load(array $configs, ContainerBuilder $container): void
@@ -40,5 +43,4 @@ class AustralEntityTranslateExtension extends Extension
   {
     return 'https://austral.dev/schema/dic/austral_entity_translate';
   }
-
 }

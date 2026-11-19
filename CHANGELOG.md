@@ -8,11 +8,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Unit tests for `EntityTranslateMasterTrait`, `EntityTranslateChildTrait` and `DoctrineListener`.
+
 ### Changed
+
+- **BREAKING** `TranslateMasterInterface` and `TranslateChildInterface` now come from `austral/contracts` (`Austral\Contracts\Translate\…`).
+- **BREAKING** `DoctrineListener::postLoad()` takes a `Doctrine\ORM\Event\PostLoadEventArgs`.
+- **BREAKING** `DoctrineListener` keeps the `RequestStack` (`$requestStack` property) instead of the `Request` (`$request` property).
+- **BREAKING** `EntityTranslateMasterTrait::setTranslateValueByKey()` is typed: `string $fieldKey, mixed $value = null`.
+- `EntityTranslateMasterTrait` and `EntityTranslateChildTrait` are generic (`@template T of object`) for static analysis.
+- The dependencies used by the code are declared in `composer.json` (Doctrine Collections, ORM, Persistence, ramsey/uuid, Symfony DependencyInjection, HttpFoundation, HttpKernel, PropertyAccess).
 
 ### Fixed
 
+- The current language is read from the current request when an entity is loaded. It was read once, when the listener was created, so it could be missing or come from a previous request.
+- `EntityTranslateMasterTrait::__set()` no longer returns a value.
+- `EntityTranslateChildTrait::getLanguage()` returns `null` instead of throwing an error when no language is set.
+
 ### Removed
+
+- **BREAKING** `Austral\EntityTranslateBundle\Entity\Interfaces\TranslateMasterInterface` and `TranslateChildInterface`: use `Austral\Contracts\Translate\TranslateMasterInterface` and `TranslateChildInterface`.
+- The `@ORM\Column` annotation left on `EntityTranslateChildTrait::$isReferent`: only the attribute is used.
 
 ## [3.1.0] - 2022-09-17
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Austral EntityTranslate Bundle package.
  *
@@ -12,13 +13,15 @@ namespace Austral\EntityTranslateBundle\Entity\Interfaces;
 
 /**
  * Kept for backward compatibility with 3.x projects.
- * @deprecated since 4.0, use \Austral\Contracts\Translate\TranslateChildInterface instead.
+ *
+ * @deprecated since 4.0, use \Austral\Contracts\Translate\TranslateMasterInterface instead.
+ *
  * @template T of object
  *
- * @extends \Austral\Contracts\Translate\TranslateChildInterface<T>
+ * @extends \Austral\Contracts\Translate\TranslateMasterInterface<T>
  *
  * @author Matthieu Beurel <matthieu@austral.dev>
  */
-interface TranslateChildInterface extends \Austral\Contracts\Translate\TranslateChildInterface
+interface TranslateMasterInterface extends \Austral\Contracts\Translate\TranslateMasterInterface
 {
 }

@@ -17,13 +17,50 @@ All `austral/*` packages must be upgraded to `^4.0` at the same time.
 
 ## Breaking changes
 
-<!--
-For each break: what changes, why, and a before / after example.
+### Translate interfaces moved to `austral/contracts`
 
-### Annotations replaced by attributes
+The interfaces of `Austral\EntityTranslateBundle\Entity\Interfaces` are removed, without alias.
 
 Before:
-    /** @Austral\Field(...) */
+
+```php
+use Austral\EntityTranslateBundle\Entity\Interfaces\TranslateMasterInterface;
+use Austral\EntityTranslateBundle\Entity\Interfaces\TranslateChildInterface;
+```
+
 After:
-    #[Austral\Field(...)]
--->
+
+```php
+use Austral\Contracts\Translate\TranslateMasterInterface;
+use Austral\Contracts\Translate\TranslateChildInterface;
+```
+
+To update a project:
+
+```bash
+grep -rl 'Austral\\EntityTranslateBundle\\Entity\\Interfaces\\' src | xargs sed -i 's/Austral\\EntityTranslateBundle\\Entity\\Interfaces\\/Austral\\Contracts\\Translate\\/g'
+```
+
+### `DoctrineListener`
+
+- `postLoad()` takes a `Doctrine\ORM\Event\PostLoadEventArgs` instead of a `Doctrine\Persistence\Event\LifecycleEventArgs`.
+- The `$request` property is replaced by `$requestStack`. The current request is read when an entity is loaded.
+
+A class that extends `DoctrineListener` and overrides `postLoad()` or reads `$this->request` must be updated.
+
+### `EntityTranslateMasterTrait::setTranslateValueByKey()`
+
+The parameters are typed:
+
+```php
+// Before
+public function setTranslateValueByKey(TranslateChildInterface $translate, $fieldKey, $value = null): self
+// After
+public function setTranslateValueByKey(TranslateChildInterface $translate, string $fieldKey, mixed $value = null): self
+```
+
+An entity that overrides this method must use the new signature, otherwise PHP throws a fatal error.
+
+### `EntityTranslateMasterTrait::__set()`
+
+`__set()` no longer returns the value of the setter. Code that used the return value of `$entity->__set(...)` must call the setter directly.

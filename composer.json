@@ -1,52 +1,66 @@
 {
-    "name": "austral/entity-translate-bundle",
-    "type": "symfony-bundle",
-    "description": "Translate Entity bundle to Symfony",
-    "keywords": [
-        "Austral",
-        "Translate Entity",
-        "I18n",
-        "Symfony"
-    ],
-    "license": "MIT",
-    "homepage": "https://austral.dev",
-    "authors": [
-        {
-            "name": "Matthieu Beurel",
-            "email": "matthieu@austral.dev",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": ">=8.4 <9.0",
-        "austral/contracts": "^4.0",
-        "austral/tools-bundle": "^4.0",
-        "austral/entity-bundle": "^4.0",
-        "symfony/config": "^7.4"
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.64",
-        "phpstan/phpstan": "^2.0",
-        "phpstan/phpstan-symfony": "^2.0"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "autoload": {
-        "psr-4": {
-            "Austral\\EntityTranslateBundle\\": ""
-        }
-    },
-    "scripts": {
-        "test": "php -d assert.exception=1 vendor/bin/phpunit",
-        "stan": "vendor/bin/phpstan analyse",
-        "rector": "vendor/bin/rector process --ansi"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "extra": {
-        "symfony": {
-            "allow-contrib": true
-        }
+  "name": "austral/entity-translate-bundle",
+  "type": "symfony-bundle",
+  "description": "Translate Entity bundle to Symfony",
+  "keywords": [
+    "Austral",
+    "Translate Entity",
+    "I18n",
+    "Symfony"
+  ],
+  "license": "MIT",
+  "homepage": "https://austral.dev",
+  "authors": [
+    {
+      "name": "Matthieu Beurel",
+      "email": "matthieu@austral.dev",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": ">=8.4 <9.0",
+    "austral/contracts": "^4.0",
+    "austral/entity-bundle": "^4.0",
+    "austral/tools-bundle": "^4.0",
+    "doctrine/collections": "^2.2 || ^3.1",
+    "doctrine/orm": "^3.7",
+    "doctrine/persistence": "^3.3 || ^4.0",
+    "ramsey/uuid": "^4.9.1",
+    "symfony/config": "^7.4",
+    "symfony/dependency-injection": "^7.4",
+    "symfony/http-foundation": "^7.4",
+    "symfony/http-kernel": "^7.4",
+    "symfony/property-access": "^7.4"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.64",
+    "phpstan/phpstan": "^2.0",
+    "phpstan/phpstan-symfony": "^2.0",
+    "phpunit/phpunit": "^11.5"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Austral\\EntityTranslateBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Austral\\EntityTranslateBundle\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "php -d assert.exception=1 vendor/bin/phpunit",
+    "stan": "vendor/bin/phpstan analyse",
+    "rector": "vendor/bin/rector process --ansi"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "symfony": {
+      "allow-contrib": true
+    }
+  }
 }

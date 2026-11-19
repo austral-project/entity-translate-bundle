@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Austral EntityTranslate Bundle package.
  *
@@ -9,16 +10,17 @@
  */
 
 namespace Austral\EntityTranslateBundle;
+
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Austral EntityTranslate Bundle.
+ *
  * @author Matthieu Beurel <matthieu@austral.dev>
  */
 class AustralEntityTranslateBundle extends Bundle
 {
-
   /**
    * @param ContainerBuilder $container
    */
@@ -26,5 +28,4 @@ class AustralEntityTranslateBundle extends Bundle
   {
     parent::build($container);
   }
-
 }
