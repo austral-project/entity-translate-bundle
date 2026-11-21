@@ -24,7 +24,6 @@ use Austral\EntityBundle\PropertyAccess\FieldAccessor;
  */
 final class TranslatableValueAccessor implements ValueAccessorInterface
 {
-
   /**
    * {@inheritDoc}
    */
