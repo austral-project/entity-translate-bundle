@@ -41,6 +41,20 @@ To update a project:
 grep -rl 'Austral\\EntityTranslateBundle\\Entity\\Interfaces\\' src | xargs sed -i 's/Austral\\EntityTranslateBundle\\Entity\\Interfaces\\/Austral\\Contracts\\Translate\\/g'
 ```
 
+### Traits combining translation with another bundle
+
+entity-translate-bundle no longer knows the other bundles. These classes are removed, without alias:
+
+| 3.1 (`Austral\EntityTranslateBundle\…`) | 4.0 |
+|-----|-----|
+| `Entity\Traits\EntityTranslateMasterFileCropperTrait` | `Austral\EntityFileBundle\Bridge\EntityTranslate\Entity\Traits\EntityFileCropperTranslateMasterTrait` (see the `UPGRADE-4.0.md` of entity-file-bundle) |
+| `Entity\Traits\EntityTranslateMasterComponentsTrait` | provided by content-block-bundle (see its `UPGRADE-4.0.md`) |
+| `Entity\Traits\EntityTranslateMasterRobotTrait` | provided by seo-bundle (see its `UPGRADE-4.0.md`) |
+| `Entity\Traits\EntityTranslateMasterSeoTrait` | provided by seo-bundle (see its `UPGRADE-4.0.md`) |
+| `Listener\ElasticSearchListener` (service `austral.entity_translate.elastic_search.listener`) | handled by elastic-search-bundle |
+
+A project that uses one of these traits gets a fatal error ("Trait not found") until the `use` is updated.
+
 ### `DoctrineListener`
 
 - `postLoad()` takes a `Doctrine\ORM\Event\PostLoadEventArgs` instead of a `Doctrine\Persistence\Event\LifecycleEventArgs`.

@@ -29,6 +29,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - **BREAKING** `Austral\EntityTranslateBundle\Entity\Interfaces\TranslateMasterInterface` and `TranslateChildInterface`: use `Austral\Contracts\Translate\TranslateMasterInterface` and `TranslateChildInterface`.
 - The `@ORM\Column` annotation left on `EntityTranslateChildTrait::$isReferent`: only the attribute is used.
+- **BREAKING** The traits that combined translation with another bundle are removed from entity-translate-bundle, which no longer depends on those bundles:
+  - `EntityTranslateMasterFileCropperTrait`: replaced by `Austral\EntityFileBundle\Bridge\EntityTranslate\Entity\Traits\EntityFileCropperTranslateMasterTrait` (entity-file-bundle);
+  - `EntityTranslateMasterComponentsTrait` (content-block), `EntityTranslateMasterRobotTrait` and `EntityTranslateMasterSeoTrait` (seo): their replacement is documented in the `UPGRADE-4.0.md` of content-block-bundle and seo-bundle.
+- **BREAKING** `Listener\ElasticSearchListener` and its service `austral.entity_translate.elastic_search.listener`: the indexing of translated entities is handled by elastic-search-bundle.
 
 ## [3.1.0] - 2022-09-17
 
