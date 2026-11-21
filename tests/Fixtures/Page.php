@@ -63,6 +63,14 @@ final class Page extends Entity implements TranslateMasterInterface
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public function getTranslateClassname(): string
+  {
+    return PageTranslate::class;
+  }
+
+  /**
    * @return TranslateChildInterface<object>
    */
   public function createNewTranslateByLanguage(): TranslateChildInterface

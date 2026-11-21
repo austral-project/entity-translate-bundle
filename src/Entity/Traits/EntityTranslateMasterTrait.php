@@ -14,6 +14,7 @@ namespace Austral\EntityTranslateBundle\Entity\Traits;
 use Austral\Contracts\Translate\TranslateChildInterface;
 use Austral\Contracts\Translate\TranslateMasterInterface;
 use Austral\EntityBundle\Entity\Entity;
+use Austral\EntityBundle\PropertyAccess\FieldAccessor;
 use Austral\ToolsBundle\AustralTools;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -65,6 +66,8 @@ trait EntityTranslateMasterTrait
   abstract public function createNewTranslateByLanguage(): TranslateChildInterface;
 
   /**
+   * Reads the master first, then the current translation. Reading never creates a translation.
+   *
    * @param string $name
    *
    * @return mixed
@@ -73,21 +76,18 @@ trait EntityTranslateMasterTrait
    */
   public function __get(string $name): mixed
   {
-    $fieldKey = $name;
-    $getter = AustralTools::createGetterFunction($fieldKey);
-    if (method_exists($this, $fieldKey) || method_exists($this, $getter))
+    if (FieldAccessor::isReadable($this, $name))
     {
-      return method_exists($this, $fieldKey) ? $this->$fieldKey() : $this->$getter();
+      return FieldAccessor::getValue($this, $name);
     }
-    if (!$translate = $this->getTranslateCurrent())
-    {
-      $translate = $this->createNewTranslateByLanguage();
-    }
+    $translate = $this->getTranslateCurrent();
 
-    return $this->getTranslateValueByKey($translate, $fieldKey);
+    return $translate ? $this->getTranslateValueByKey($translate, $name) : null;
   }
 
   /**
+   * Answers from the translation class when there is no current translation, so nothing is created.
+   *
    * @param string $name
    *
    * @return bool
@@ -96,22 +96,17 @@ trait EntityTranslateMasterTrait
    */
   public function __isset(string $name): bool
   {
-    $fieldKey = $name;
-    $getter = AustralTools::createGetterFunction($fieldKey);
-    $return = method_exists($this, $fieldKey) || method_exists($this, $getter);
-    if (!$return)
+    if (FieldAccessor::isReadable($this, $name))
     {
-      if (!$translate = $this->getTranslateCurrent())
-      {
-        $translate = $this->createNewTranslateByLanguage();
-      }
-      $return = method_exists($translate, $fieldKey) || method_exists($translate, $getter);
+      return true;
     }
 
-    return $return;
+    return FieldAccessor::isReadable($this->getTranslateCurrent() ?? $this->getTranslateClassname(), $name);
   }
 
   /**
+   * Writes the master first, then the current translation, created if needed.
+   *
    * @param string $name
    * @param mixed  $value
    *
@@ -121,19 +116,18 @@ trait EntityTranslateMasterTrait
    */
   public function __set(string $name, mixed $value)
   {
-    $fieldKey = $name;
-    $setter = AustralTools::createSetterFunction($fieldKey);
-    if (method_exists($this, $fieldKey) || method_exists($this, $setter))
+    if (FieldAccessor::isWritable($this, $name))
     {
-      method_exists($this, $fieldKey) ? $this->$fieldKey($value) : $this->$setter($value);
+      FieldAccessor::setValue($this, $name, $value);
 
       return;
     }
-    if (!$translate = $this->getTranslateCurrent())
+    $translate = $this->getTranslateCurrent();
+    if (!FieldAccessor::isWritable($translate ?? $this->getTranslateClassname(), $name))
     {
-      $translate = $this->createNewTranslateByLanguage();
+      throw new \LogicException(sprintf('The field "%s" is writable neither on "%s" nor on its translation.', $name, static::class));
     }
-    $this->setTranslateValueByKey($translate, $fieldKey, $value);
+    $this->setTranslateValueByKey($translate ?? $this->createNewTranslateByLanguage(), $name, $value);
   }
 
   /**
@@ -230,13 +224,11 @@ trait EntityTranslateMasterTrait
    * @param TranslateChildInterface<T> $translate
    * @param string                     $fieldKey
    *
-   * @return mixed
+   * @return mixed null when the translation has no such field
    */
   public function getTranslateValueByKey(TranslateChildInterface $translate, string $fieldKey): mixed
   {
-    $getter = AustralTools::createGetterFunction($fieldKey);
-
-    return method_exists($translate, $fieldKey) ? $translate->$fieldKey() : $translate->$getter();
+    return FieldAccessor::isReadable($translate, $fieldKey) ? FieldAccessor::getValue($translate, $fieldKey) : null;
   }
 
   /**
@@ -245,11 +237,12 @@ trait EntityTranslateMasterTrait
    * @param mixed                      $value
    *
    * @return $this
+   *
+   * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException when the translation has no such field
    */
   public function setTranslateValueByKey(TranslateChildInterface $translate, string $fieldKey, mixed $value = null): self
   {
-    $setter = AustralTools::createSetterFunction($fieldKey);
-    $translate->$setter($value);
+    FieldAccessor::setValue($translate, $fieldKey, $value);
 
     return $this;
   }

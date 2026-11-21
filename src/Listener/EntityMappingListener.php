@@ -11,15 +11,13 @@
 
 namespace Austral\EntityTranslateBundle\Listener;
 
-use Austral\Contracts\Entity\EntityInterface;
-use Austral\Contracts\Translate\TranslateMasterInterface;
 use Austral\EntityBundle\EntityAttributes\EntityAttributes;
 use Austral\EntityBundle\Event\EntityMappingEvent;
 use Austral\EntityBundle\Mapping\EntityMapping;
 use Austral\EntityTranslateBundle\Attribute\Translate;
 use Austral\EntityTranslateBundle\Mapping\EntityTranslateMapping;
+use Austral\EntityTranslateBundle\Mapping\ValueAccessor\TranslatableValueAccessor;
 use Doctrine\Persistence\Mapping\MappingException;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Austral Attribute Listener.
@@ -92,9 +90,12 @@ class EntityMappingListener
    * @param EntityMappingEvent<T> $entityMappingEvent
    *
    * @return void
+   *
+   * @throws \Throwable
    */
   public function mappingAfter(EntityMappingEvent $entityMappingEvent): void
   {
+    $valueAccessor = new TranslatableValueAccessor();
     foreach ($this->attributesWithTranslate as $entityClassname => $attributesByType)
     {
       foreach ($attributesByType['fields'] as $fieldname => $attributes)
@@ -103,37 +104,7 @@ class EntityMappingListener
         $fieldsMapping = is_array($fieldsMapping) ? $fieldsMapping : [];
         foreach ($fieldsMapping as $fieldMapping)
         {
-          $fieldMapping->addGetterObjectValueFonction(function (EntityInterface $object, $fieldname) {
-            $propertyAccessor = PropertyAccess::createPropertyAccessor();
-            if ($propertyAccessor->isReadable($object, $fieldname))
-            {
-              return $propertyAccessor->getValue($object, $fieldname);
-            }
-            elseif ($object instanceof TranslateMasterInterface)
-            {
-              if (($currentTranslate = $object->getTranslateCurrent()) && $propertyAccessor->isReadable($currentTranslate, $fieldname))
-              {
-                return $propertyAccessor->getValue($currentTranslate, $fieldname);
-              }
-            }
-
-            return null;
-          });
-          $fieldMapping->addSetterObjectValueFonction(function (EntityInterface $object, $fieldname, $value = null) {
-            $propertyAccessor = PropertyAccess::createPropertyAccessor();
-
-            if ($propertyAccessor->isWritable($object, $fieldname))
-            {
-              $propertyAccessor->setValue($object, $fieldname, $value);
-            }
-            elseif ($object instanceof TranslateMasterInterface)
-            {
-              if (($currentTranslate = $object->getTranslateCurrent()) && $propertyAccessor->isWritable($currentTranslate, $fieldname))
-              {
-                $propertyAccessor->setValue($currentTranslate, $fieldname, $value);
-              }
-            }
-          });
+          $fieldMapping->setValueAccessor($valueAccessor);
         }
       }
     }
