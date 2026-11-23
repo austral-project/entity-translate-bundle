@@ -66,6 +66,13 @@ trait EntityTranslateMasterTrait
   abstract public function createNewTranslateByLanguage(): TranslateChildInterface;
 
   /**
+   * Class of the translation entity, known without creating an instance.
+   *
+   * @return class-string<TranslateChildInterface<T>>
+   */
+  abstract public function getTranslateClassname(): string;
+
+  /**
    * Reads the master first, then the current translation. Reading never creates a translation.
    *
    * @param string $name
